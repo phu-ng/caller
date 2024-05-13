@@ -5,11 +5,39 @@
 # Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+stages:
+  - test
+
 include:
 - template: Security/Dependency-Scanning.gitlab-ci.yml
 - template: Security/SAST.gitlab-ci.yml
 - template: Security/Secret-Detection.gitlab-ci.yml
-stages:
-- test
-sast:
+
+semgrep-sast:
   stage: test
+  rules:
+    - if: $SAST_DISABLED == 'true' || $SAST_DISABLED == '1'
+      when: never
+    - if: $SAST_EXCLUDED_ANALYZERS =~ /semgrep/
+      when: never
+    - if: '$CI_COMMIT_BRANCH =~ /^feature\//'
+    - if: '$CI_COMMIT_BRANCH =~ /^bugfix\//'
+    - if: '$CI_COMMIT_BRANCH =~ /uat/'
+
+secret_detection:
+  rules:
+    - if: $SECRET_DETECTION_DISABLED == 'true' || $SECRET_DETECTION_DISABLED == '1'
+      when: never
+    - if: '$CI_COMMIT_BRANCH =~ /^feature\//'
+    - if: '$CI_COMMIT_BRANCH =~ /^bugfix\//'
+    - if: '$CI_COMMIT_BRANCH =~ /uat/'
+
+gemnasium-maven-dependency_scanning:
+  rules:
+    - if: $DEPENDENCY_SCANNING_DISABLED == 'true' || $DEPENDENCY_SCANNING_DISABLED == '1'
+      when: never
+    - if: $DS_EXCLUDED_ANALYZERS =~ /gemnasium-maven/
+      when: never
+    - if: '$CI_COMMIT_BRANCH =~ /^feature\//'
+    - if: '$CI_COMMIT_BRANCH =~ /^bugfix\//'
+    - if: '$CI_COMMIT_BRANCH =~ /uat/'
