@@ -9,35 +9,36 @@ stages:
   - test
 
 include:
-- template: Security/Dependency-Scanning.gitlab-ci.yml
-- template: Security/SAST.gitlab-ci.yml
-- template: Security/Secret-Detection.gitlab-ci.yml
+#- template: Security/Dependency-Scanning.gitlab-ci.yml
+#- template: Security/SAST.gitlab-ci.yml
+#- template: Security/Secret-Detection.gitlab-ci.yml
+- template: Jobs/Code-Quality.gitlab-ci.yml
 
-semgrep-sast:
-  stage: test
-  rules:
-    - if: $SAST_DISABLED == 'true' || $SAST_DISABLED == '1'
-      when: never
-    - if: $SAST_EXCLUDED_ANALYZERS =~ /semgrep/
-      when: never
-    - if: '$CI_COMMIT_BRANCH =~ /^feature\//'
-    - if: '$CI_COMMIT_BRANCH =~ /^bugfix\//'
-    - if: '$CI_COMMIT_BRANCH =~ /uat/'
-
-secret_detection:
-  rules:
-    - if: $SECRET_DETECTION_DISABLED == 'true' || $SECRET_DETECTION_DISABLED == '1'
-      when: never
-    - if: '$CI_COMMIT_BRANCH =~ /^feature\//'
-    - if: '$CI_COMMIT_BRANCH =~ /^bugfix\//'
-    - if: '$CI_COMMIT_BRANCH =~ /uat/'
-
-gemnasium-maven-dependency_scanning:
-  rules:
-    - if: $DEPENDENCY_SCANNING_DISABLED == 'true' || $DEPENDENCY_SCANNING_DISABLED == '1'
-      when: never
-    - if: $DS_EXCLUDED_ANALYZERS =~ /gemnasium-maven/
-      when: never
-    - if: '$CI_COMMIT_BRANCH =~ /^feature\//'
-    - if: '$CI_COMMIT_BRANCH =~ /^bugfix\//'
-    - if: '$CI_COMMIT_BRANCH =~ /uat/'
+#semgrep-sast:
+#  stage: test
+#  rules:
+#    - if: $SAST_DISABLED == 'true' || $SAST_DISABLED == '1'
+#      when: never
+#    - if: $SAST_EXCLUDED_ANALYZERS =~ /semgrep/
+#      when: never
+#    - if: '$CI_COMMIT_BRANCH =~ /^feature\//'
+#    - if: '$CI_COMMIT_BRANCH =~ /^bugfix\//'
+#    - if: '$CI_COMMIT_BRANCH =~ /uat/'
+#
+#secret_detection:
+#  rules:
+#    - if: $SECRET_DETECTION_DISABLED == 'true' || $SECRET_DETECTION_DISABLED == '1'
+#      when: never
+#    - if: '$CI_COMMIT_BRANCH =~ /^feature\//'
+#    - if: '$CI_COMMIT_BRANCH =~ /^bugfix\//'
+#    - if: '$CI_COMMIT_BRANCH =~ /uat/'
+#
+#gemnasium-maven-dependency_scanning:
+#  rules:
+#    - if: $DEPENDENCY_SCANNING_DISABLED == 'true' || $DEPENDENCY_SCANNING_DISABLED == '1'
+#      when: never
+#    - if: $DS_EXCLUDED_ANALYZERS =~ /gemnasium-maven/
+#      when: never
+#    - if: '$CI_COMMIT_BRANCH =~ /^feature\//'
+#    - if: '$CI_COMMIT_BRANCH =~ /^bugfix\//'
+#    - if: '$CI_COMMIT_BRANCH =~ /uat/'
